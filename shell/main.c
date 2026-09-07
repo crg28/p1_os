@@ -15,6 +15,54 @@ EditorCommand editorCommands[] = {
         "Abre un archivo",
         "open()",
         cmd_o
+    },
+    {
+        "p",
+        "editor",
+        "p [n]",
+        "Imprime la linea n, sin el n imprime todo el archivo",
+        "open()",
+        cmd_p
+    },
+    {
+        "a",
+        "editor",
+        "a [texto]",
+        "Añade texto al final",
+        "open()",
+        cmd_a
+    },
+    {
+        "d",
+        "editor",
+        "d [n]",
+        "Borra la linea n",
+        "open()",
+        cmd_d
+    },
+    {
+        "q",
+        "editor",
+        "q",
+        "Cierra el file descriptor",
+        "open()",
+        cmd_q
+    },
+    {
+        "i",
+        "editor",
+        "i [n] [texto]",
+        "Inserta el texto en la linea n",
+        "open()",
+        cmd_i
+    },
+    {
+        "s",
+        "editor",
+        "s [palabra]",
+        "Busca la palabra",
+        "open()",
+        cmd_s
     }
 };
 /**
@@ -218,7 +266,8 @@ void print_help(const char *arg) {
         printf("  " COLOR_CATEGORY "datos" COLOR_RESET "      - Comandos de archivos y datos (open, read, write, stat, ...)\n");
         printf("  " COLOR_CATEGORY "memoria" COLOR_RESET "    - Comandos de control de heap y memoria (sbrk, mmap, ...)\n");
         printf("  " COLOR_CATEGORY "monitoreo" COLOR_RESET "  - Comandos de procesos, señales y recursos (fork, exec, kill, getrusage)\n");
-        printf("  " COLOR_CATEGORY "utilidades" COLOR_RESET " - Comandos útiles del sistema (saludar, hora, fecha, despedir)\n\n");
+        printf("  " COLOR_CATEGORY "utilidades" COLOR_RESET " - Comandos útiles del sistema (saludar, hora, fecha, despedir)\n");
+        printf("  " COLOR_CATEGORY "editor" COLOR_RESET " - Comandos de edición de archivos (abrir, imprimir, añadir, borrar, etc)\n\n");
         printf("Uso general:\n");
         printf("  " COLOR_PROMPT "help <categoria>" COLOR_RESET "  - Muestra comandos específicos de una categoría.\n");
         printf("  " COLOR_PROMPT "help <comando>" COLOR_RESET "    - Explica el uso y las syscalls de un comando específico.\n");
@@ -240,6 +289,18 @@ void print_help(const char *arg) {
         return;
     }
 
+    /* Caso 2: El usuario escribió 'help <categoria>': Mostrar comandos del grupo editor*/
+    if (strcmp(arg, "editor") == 0){
+        printf(COLOR_TITLE "\n--- Categoría: editor de texto ---\n" COLOR_RESET);
+        for (int i = 0; i < num_editor_commands; i++) {
+            if (strcmp(editorCommands[i].category, arg) == 0) {
+                printf("  " COLOR_PROMPT "%-10s" COLOR_RESET " -> %s\n", editorCommands[i].name, editorCommands[i].description);
+                printf("                " COLOR_INFO "Llamada(s): %s" COLOR_RESET "\n\n", editorCommands[i].syscalls);
+            }
+        }
+        return;
+    }
+
     /* Caso 3: El usuario escribió 'help <comando>': Explicar syscalls individuales */
     for (int i = 0; i < num_commands; i++) {
         if (strcmp(commands[i].name, arg) == 0) {
@@ -247,6 +308,17 @@ void print_help(const char *arg) {
             printf("  Descripción:  %s\n", commands[i].description);
             printf("  Uso:          " COLOR_PARAM "%s" COLOR_RESET "\n", commands[i].usage);
             printf("  Syscalls:     " COLOR_SYSCALL "%s" COLOR_RESET "\n\n", commands[i].syscalls);
+            return;
+        }
+    }
+    
+    /* Caso 3: El usuario escribió 'help <editor>': Explicar syscalls individuales del editor de texto */
+    for (int i = 0; i < num_editor_commands; i++) {
+        if (strcmp(editorCommands[i].name, arg) == 0) {
+            printf(COLOR_TITLE "\nDetalles de comando: %s\n" COLOR_RESET, editorCommands[i].name);
+            printf("  Descripción:  %s\n", editorCommands[i].description);
+            printf("  Uso:          " COLOR_PARAM "%s" COLOR_RESET "\n", editorCommands[i].usage);
+            printf("  Syscalls:     " COLOR_SYSCALL "%s" COLOR_RESET "\n\n", editorCommands[i].syscalls);
             return;
         }
     }

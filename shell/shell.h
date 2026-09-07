@@ -110,5 +110,12 @@ int cmd_hora(int argc, char **argv);      /* Syscalls: time */
 int cmd_fecha(int argc, char **argv);     /* Syscalls: time */
 
 int cmd_o(int argc, char **argv, Editor *editor);
+int cmd_p(int argc, char **argv, Editor *editor);
+int cmd_a(int argc, char **argv, Editor *editor);
+int cmd_n(int argc, char **argv, Editor *editor);
+int cmd_d(int argc, char **argv, Editor *editor);
+int cmd_q(int argc, char **argv, Editor *editor);
+int cmd_i(int argc, char **argv, Editor *editor);
+int cmd_s(int argc, char **argv, Editor *editor);
 
 #endif /* SHELL_H */
