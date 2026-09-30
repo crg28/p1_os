@@ -48,23 +48,36 @@ static char *read_all_fd(int fd, off_t *out_size) {
     return buffer;
 }
 
-// Abrir archivo -> o -nombreArchivo
+// abrir archivo -> o nombreArchivo
 int cmd_o(int argc, char *argv[], Editor *editor)
 {
-    if(argc < 2){
-        fprintf(stderr, COLOR_ERROR "Uso: o [nombre_archivo.ext] \n" COLOR_RESET);
+    if (argc != 2) {
+        fprintf(stderr, COLOR_ERROR "Uso: o [nombre_archivo.ext]\n" COLOR_RESET);
         return -1;
     }
 
     const char *nArchivo = argv[1];
 
-    editor->fd = open(nArchivo, O_RDWR | O_CREAT, 0644);
+    // cerrar el archivo anterior en caso de que haya uno ya abierto
+    if (editor->fd != -1) {
+        LOG_SYSCALL("close", "%d", editor->fd);
+        if (close(editor->fd) == -1) {
+            perror("close");
+        }
+        editor->fd = -1;  // file descriptor = -1, indica que no hay archivo abierto
+    }
 
-    if(editor->fd == -1)
-    {
-        perror("open");
+    // abrir el nuevo archivo y guardar su estado en el struct editor
+    LOG_SYSCALL("open", "%s, O_RDWR | O_CREAT, 0644", nArchivo);
+    editor->fd = open(nArchivo, O_RDWR | O_CREAT, 0644);
+    if (editor->fd == -1) {
+        perror("open");  // manejo de errores en caso de no poderlo abrir
         return -1;
     }
+    LOG_SYSCALL_RESULT(editor->fd);  // imprime lo que devuelve el syscall open
+
+    printf(COLOR_RESULT "Archivo abierto: %s\n" COLOR_RESET, nArchivo);
+    return 0;
 }
 
 // Imprime la linea n -> p [n] | o todo -> p
