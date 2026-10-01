@@ -21,7 +21,7 @@ EditorCommand editorCommands[] = {
         "editor",
         "p [n]",
         "Imprime la linea n, sin el n imprime todo el archivo",
-        "open()",
+        "lseek(), read(), write()",
         cmd_p
     },
     {
@@ -53,7 +53,7 @@ EditorCommand editorCommands[] = {
         "editor",
         "i [n] [texto]",
         "Inserta el texto en la linea n",
-        "open()",
+        "lseek(), read(), write()",
         cmd_i
     },
     {
@@ -61,7 +61,7 @@ EditorCommand editorCommands[] = {
         "editor",
         "s [palabra]",
         "Busca la palabra",
-        "open()",
+        "lseek(), read()",
         cmd_s
     }
 };
