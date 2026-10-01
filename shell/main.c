@@ -13,7 +13,7 @@ EditorCommand editorCommands[] = {
         "editor",
         "o [archivo]",
         "Abre un archivo",
-        "open()",
+        "open(), close()",
         cmd_o
     },
     {
